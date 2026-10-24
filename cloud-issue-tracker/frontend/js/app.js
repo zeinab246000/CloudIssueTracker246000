@@ -4,7 +4,7 @@
 const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 const API_BASE_URL = isLocal
   ? 'http://localhost:3000/api/issues'
-  : 'https://YOUR-PROJECT.vercel.app/api/issues';
+  : 'https://cloud-issue-tracker246000.vercel.app/api/issuescd';
 
 // Lab 5 Part 15: Turnstile site key (public). Locally use Cloudflare's test key.
 const TURNSTILE_SITE_KEY = isLocal
