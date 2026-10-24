@@ -1,0 +1,99 @@
+@baseUrl = http://localhost:3000
+
+### T01 View all issues
+GET {{baseUrl}}/api/issues
+
+### T02 Create a valid issue
+POST {{baseUrl}}/api/issues
+X-Turnstile-Token: XXXX.DUMMY.TOKEN.XXXX
+Content-Type: application/json
+
+{
+  "title": "Printer unavailable",
+  "description": "The shared printer is not responding.",
+  "priority": "Medium"
+}
+
+### T03 Missing title
+POST {{baseUrl}}/api/issues
+X-Turnstile-Token: XXXX.DUMMY.TOKEN.XXXX
+Content-Type: application/json
+
+{
+  "description": "Missing valid title",
+  "priority": "Medium"
+}
+
+### T04 Invalid priority
+POST {{baseUrl}}/api/issues
+X-Turnstile-Token: XXXX.DUMMY.TOKEN.XXXX
+Content-Type: application/json
+
+{
+  "title": "Projector flickering",
+  "description": "The projector in room B204 flickers.",
+  "priority": "Critical"
+}
+
+### T05 Change status (replace ISS-101 with an id from GET)
+PATCH {{baseUrl}}/api/issues/ISS-101/status
+Content-Type: application/json
+
+{ "status": "Resolved" }
+
+### T06 Invalid status
+PATCH {{baseUrl}}/api/issues/ISS-101/status
+Content-Type: application/json
+
+{ "status": "Deleted" }
+
+### T07 Update an unknown issue
+PATCH {{baseUrl}}/api/issues/does-not-exist/status
+Content-Type: application/json
+
+{ "status": "Resolved" }
+
+### T09 Client tries to choose server-owned fields
+POST {{baseUrl}}/api/issues
+X-Turnstile-Token: XXXX.DUMMY.TOKEN.XXXX
+Content-Type: application/json
+
+{
+  "id": "HACKED-1",
+  "title": "Projector flickering",
+  "description": "The projector in room B204 flickers.",
+  "priority": "Low",
+  "status": "Resolved",
+  "createdAt": "2000-01-01T00:00:00.000Z"
+}
+
+### T10 Create without JSON (415)
+POST {{baseUrl}}/api/issues
+X-Turnstile-Token: XXXX.DUMMY.TOKEN.XXXX
+Content-Type: text/plain
+
+title=Printer
+
+### T11 Malformed JSON (400)
+POST {{baseUrl}}/api/issues
+X-Turnstile-Token: XXXX.DUMMY.TOKEN.XXXX
+Content-Type: application/json
+
+{
+  "title": "Printer unavailable",
+  "description": "The shared printer is not responding.",
+  "priority": "Medium",
+}
+
+### T12 Unknown route (404)
+PATCH {{baseUrl}}/api/fake-url
+
+### T13 Create without the Turnstile token (403)
+POST {{baseUrl}}/api/issues
+Content-Type: application/json
+
+{
+  "title": "Printer unavailable",
+  "description": "The shared printer is not responding.",
+  "priority": "Medium"
+}
